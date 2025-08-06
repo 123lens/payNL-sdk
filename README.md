@@ -14,6 +14,11 @@
 
 ---
 
+### Version
+
+This SDK supports the older rest-api version. 
+The newest SDK (based on V3 order api) can be found here: [https://github.com/paynl/php-sdk](https://github.com/paynl/php-sdk)
+
 ### Installation
 
 This SDK uses composer.

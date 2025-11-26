@@ -64,6 +64,8 @@ class Transaction
     {
         $api = new Api\Start();
 
+        \Paynl\Config::setApiBase('https://connect.pay.nl');
+
         if (isset($options['amount'])) {
             $api->setAmount(round($options['amount'] * 100));
         }

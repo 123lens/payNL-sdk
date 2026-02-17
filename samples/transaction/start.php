@@ -16,14 +16,14 @@ if ($password) {
 try {
     # Required
     $startData['amount'] = $_REQUEST['amount'] ?? 0.01;
-    $startData['returnUrl'] =  $_REQUEST['returnUrl'] ?? (\Paynl\Helper::getBaseUrl()) . '/return.php';
+    $startData['returnUrl'] = $_REQUEST['returnUrl'] ?? 'https://yourdomain.com/return.php';
 
     # Optional
     $startData = array_merge($startData, array(
-      'exchangeUrl' =>  $_REQUEST['exchangeUrl'] ??  dirname(\Paynl\Helper::getBaseUrl()) . '/exchange.php',
+      'exchangeUrl' => $_REQUEST['exchangeUrl'] ?? 'https://yourdomain.com/exchange.php',
       'paymentMethod' => $_REQUEST['paymentMethodId'] ?? '10',
       'currency' => 'EUR',
-      'expireDate' => new \DateTime('2016-04-01'),
+      'expireDate' => new \DateTime('2025-04-01'),
       'orderNumber' => '123456', # Max 16 alphanumeric characters
       'description' => 'Order 123456',
       'testmode' => ($_REQUEST['testmode'] ?? 1),
@@ -37,7 +37,7 @@ try {
       ),
       'ipaddress' => '10.0.0.1',
       'invoiceDate' => new \DateTime('now'),
-      'deliveryDate' => new \DateTime('2016-06-06'), # In case of tickets for an event, use the event date here
+      'deliveryDate' => new \DateTime('2025-06-06'), # In case of tickets for an event, use the event date here
       'products' => array(
         array(
           'id' => 1,
@@ -119,6 +119,9 @@ try {
       'object' => 'PHPSDK'
     ));
 
+    //echo '<pre>';
+    //print_r($startData);
+    //ex/it();
     # Start the transaction
     $result = \Paynl\Transaction::start($startData);
 

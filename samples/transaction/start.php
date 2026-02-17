@@ -1,22 +1,32 @@
 <?php
 
-require_once '../../vendor/autoload.php';
-require_once '../config.php';
+require_once '/src/public/vendor/autoload.php';
+require_once '/src/public/config.php';
+
+$slcode = $_REQUEST['slcode'] ?? '';
+if ($slcode) {
+    \Paynl\Config::setServiceId($slcode);
+}
+
+$password = $_REQUEST['password'] ?? false;
+if ($password) {
+    \Paynl\Config::setApiToken($password);
+}
 
 try {
     # Required
-    $startData['amount'] = 12.50;
-    $startData['returnUrl'] = dirname(\Paynl\Helper::getBaseUrl()) . '/return.php';
+    $startData['amount'] = $_REQUEST['amount'] ?? 0.01;
+    $startData['returnUrl'] =  $_REQUEST['returnUrl'] ?? (\Paynl\Helper::getBaseUrl()) . '/return.php';
 
     # Optional
     $startData = array_merge($startData, array(
-      'exchangeUrl' => dirname(\Paynl\Helper::getBaseUrl()) . '/exchange.php',
-      'paymentMethod' => 10,
+      'exchangeUrl' =>  $_REQUEST['exchangeUrl'] ??  dirname(\Paynl\Helper::getBaseUrl()) . '/exchange.php',
+      'paymentMethod' => $_REQUEST['paymentMethodId'] ?? '10',
       'currency' => 'EUR',
       'expireDate' => new \DateTime('2016-04-01'),
       'orderNumber' => '123456', # Max 16 alphanumeric characters
       'description' => 'Order 123456',
-      'testmode' => 0,
+      'testmode' => ($_REQUEST['testmode'] ?? 1),
       'extra1' => 'ext1',
       'extra2' => 'ext2',
       'extra3' => 'ext3',
@@ -115,7 +125,7 @@ try {
     # Save this transactionid and link it to your order
     $transactionId = $result->getTransactionId();
 
-    echo '<a href="' . $result->getRedirectUrl() . '">' . $result->getRedirectUrl() . '</a><br>';
+    echo '<a target="_blank" href="' . $result->getRedirectUrl() . '">' . $result->getRedirectUrl() . '</a><br>';
     echo $transactionId;
 
 } catch (\Paynl\Error\Error $e) {

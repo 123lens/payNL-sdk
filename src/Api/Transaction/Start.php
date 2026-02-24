@@ -374,7 +374,7 @@ class Start extends Transaction
      */
     public function doRequest($endpoint = null, $version = null)
     {
-        return parent::doRequest('transaction/start');
+        return parent::doRequestWithBaseUrl('transaction/start', null, 'https://connect.pay.nl');
     }
 
     /**

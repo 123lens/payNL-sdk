@@ -1,7 +1,9 @@
 <?php
 
-require_once '/src/public/vendor/autoload.php';
-require_once '/src/public/config.php';
+define('PROJECT_ROOT', '');
+
+require_once PROJECT_ROOT . '/vendor/autoload.php';
+require_once PROJECT_ROOT . '/config.php';
 
 $slcode = $_REQUEST['slcode'] ?? '';
 if ($slcode) {
@@ -116,13 +118,9 @@ try {
         'country' => 'CA',
         'regionCode' => 'CA-NL',
       ),
-      'object' => 'PHPSDK'
+      'object' => 'sdk'
     ));
 
-    //echo '<pre>';
-    //print_r($startData);
-    //ex/it();
-    # Start the transaction
     $result = \Paynl\Transaction::start($startData);
 
     # Save this transactionid and link it to your order

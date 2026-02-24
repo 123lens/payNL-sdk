@@ -1,7 +1,9 @@
 <?php
 
-require_once '/src/public/vendor/autoload.php';
-require_once '/src/public/config.php';
+define('PROJECT_ROOT', '');
+
+require_once PROJECT_ROOT . '/vendor/autoload.php';
+require_once PROJECT_ROOT . '/config.php';
 
 $transactionId = $_REQUEST['pay_order_id'] ?? '1234567890X12345';
 

@@ -1,22 +1,34 @@
 <?php
 
-require_once '../../vendor/autoload.php';
-require_once '../config.php';
+define('PROJECT_ROOT', '');
+
+require_once PROJECT_ROOT . '/vendor/autoload.php';
+require_once PROJECT_ROOT . '/config.php';
+
+$slcode = $_REQUEST['slcode'] ?? '';
+if ($slcode) {
+    \Paynl\Config::setServiceId($slcode);
+}
+
+$password = $_REQUEST['password'] ?? false;
+if ($password) {
+    \Paynl\Config::setApiToken($password);
+}
 
 try {
     # Required
-    $startData['amount'] = 12.50;
-    $startData['returnUrl'] = dirname(\Paynl\Helper::getBaseUrl()) . '/return.php';
+    $startData['amount'] = $_REQUEST['amount'] ?? 0.01;
+    $startData['returnUrl'] = $_REQUEST['returnUrl'] ?? 'https://yourdomain.com/return.php';
 
     # Optional
     $startData = array_merge($startData, array(
-      'exchangeUrl' => dirname(\Paynl\Helper::getBaseUrl()) . '/exchange.php',
-      'paymentMethod' => 10,
+      'exchangeUrl' => $_REQUEST['exchangeUrl'] ?? 'https://yourdomain.com/exchange.php',
+      'paymentMethod' => $_REQUEST['paymentMethodId'] ?? '10',
       'currency' => 'EUR',
-      'expireDate' => new \DateTime('2016-04-01'),
+      'expireDate' => new \DateTime('2025-04-01'),
       'orderNumber' => '123456', # Max 16 alphanumeric characters
       'description' => 'Order 123456',
-      'testmode' => 0,
+      'testmode' => ($_REQUEST['testmode'] ?? 1),
       'extra1' => 'ext1',
       'extra2' => 'ext2',
       'extra3' => 'ext3',
@@ -27,7 +39,7 @@ try {
       ),
       'ipaddress' => '10.0.0.1',
       'invoiceDate' => new \DateTime('now'),
-      'deliveryDate' => new \DateTime('2016-06-06'), # In case of tickets for an event, use the event date here
+      'deliveryDate' => new \DateTime('2025-06-06'), # In case of tickets for an event, use the event date here
       'products' => array(
         array(
           'id' => 1,
@@ -106,16 +118,15 @@ try {
         'country' => 'CA',
         'regionCode' => 'CA-NL',
       ),
-      'object' => 'PHPSDK'
+      'object' => 'sdk'
     ));
 
-    # Start the transaction
     $result = \Paynl\Transaction::start($startData);
 
     # Save this transactionid and link it to your order
     $transactionId = $result->getTransactionId();
 
-    echo '<a href="' . $result->getRedirectUrl() . '">' . $result->getRedirectUrl() . '</a><br>';
+    echo '<a target="_blank" href="' . $result->getRedirectUrl() . '">' . $result->getRedirectUrl() . '</a><br>';
     echo $transactionId;
 
 } catch (\Paynl\Error\Error $e) {

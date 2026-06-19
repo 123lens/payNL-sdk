@@ -23,6 +23,10 @@ class Paymentmethods
     {
         $paymentMethods = array();
 
+        // extract basepath from service.
+        $service = $input['service'] ?? [];
+        $basePath = $service['basePath'] ?? '';
+
         foreach ((array)$input['countryOptionList'] as $country) {
 
             foreach ((array)$country['paymentOptionList'] as $paymentOption) {
@@ -37,7 +41,7 @@ class Paymentmethods
 
                         $image = '';
                         if (isset($optionSub['image'])) {
-                            $image = $optionSub['image'];
+                            $image = $basePath . $optionSub['image'];
                         }
                         $banks[] = array(
                           'id' => $optionSub['id'],
